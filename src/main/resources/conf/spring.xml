@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 引入jdbc配置文件 -->
+    <context:property-placeholder location="classpath:conf/jdbc.properties"/>
+    
+    <!-- 扫描文件（自动将servicec层注入） -->
+    <context:component-scan base-package="cn.springmvc.service"/>
+    <context:component-scan base-package="cn.springmvc.annotation"/>
+    <!--      开启切面代理 使得spring认识 @Aspect -->
+    <aop:aspectj-autoproxy/>
+    <!-- 支持异步方法执行 -->
+    <task:annotation-driven />
+
+    <!-- 线程池 -->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="2" /><!-- 核心线程数 -->
+        <property name="maxPoolSize" value="200" /><!-- 最大线程数 -->
+        <property name="keepAliveSeconds" value="500" /><!-- 线程所允许的空闲时间 -->
+        <property name="queueCapacity" value="5000" /><!-- 工作队列最大长度 -->
+    </bean>
+
+    <bean id="myTest" class="cn.springmvc.annotation.Test"></bean>
+</beans>
